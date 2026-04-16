@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cops and Robbers</title>
+  <title>Cat and Mouse</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div id="game">
-    <h1>Cops &amp; Robbers</h1>
+    <h1>Cats &amp; Mice</h1>
 
     <div id="top">
-      <div id="status">Place <strong>Cop</strong> on a node to begin</div>
+      <div id="status">Place <strong>Cat</strong> on a node to begin</div>
       <div id="difficulty">
         Robber AI:
         <select id="diffSel">
@@ -23,23 +25,30 @@
     </div>
 
     <div id="legend">
-      <div class="leg"><div class="dot cop-dot"></div>Cop</div>
-      <div class="leg"><div class="dot rob-dot"></div>Robber</div>
-      <div class="leg"><div class="dot move-dot"></div>Valid move</div>
+      <div class="leg">
+        <div class="dot cop-dot"></div>Cat
+      </div>
+      <div class="leg">
+        <div class="dot rob-dot"></div>Mouse
+      </div>
+      <div class="leg">
+        <div class="dot move-dot"></div>Valid move
+      </div>
     </div>
 
-    <div id="log">Click a node to place the cop.</div>
+    <div id="log">Click a node to place the Cat.</div>
 
     <canvas id="c"></canvas>
 
     <div id="btns">
       <button class="primary" id="resetBtn">New game</button>
-      <button id="hintBtn" disabled>Hint (cop)</button>
-      <button id="aiBtn" disabled>AI robber move</button>
-      <button id="autoBtn">Auto-play robber</button>
+      <button id="hintBtn" disabled>Hint (Cat)</button>
+      <button id="aiBtn" disabled>AI Mouse move</button>
+      <button id="autoBtn">Auto-play Mouse</button>
     </div>
   </div>
 
   <script type="module" src="main.js"></script>
 </body>
+
 </html>
