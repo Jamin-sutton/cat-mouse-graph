@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cops and Robbers</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game">
+    <h1>Cops &amp; Robbers</h1>
+
+    <div id="top">
+      <div id="status">Place <strong>Cop</strong> on a node to begin</div>
+      <div id="difficulty">
+        Robber AI:
+        <select id="diffSel">
+          <option value="greedy">Greedy</option>
+          <option value="lookahead" selected>Lookahead</option>
+          <option value="astar">A* escape</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="legend">
+      <div class="leg"><div class="dot cop-dot"></div>Cop</div>
+      <div class="leg"><div class="dot rob-dot"></div>Robber</div>
+      <div class="leg"><div class="dot move-dot"></div>Valid move</div>
+    </div>
+
+    <div id="log">Click a node to place the cop.</div>
+
+    <canvas id="c"></canvas>
+
+    <div id="btns">
+      <button class="primary" id="resetBtn">New game</button>
+      <button id="hintBtn" disabled>Hint (cop)</button>
+      <button id="aiBtn" disabled>AI robber move</button>
+      <button id="autoBtn">Auto-play robber</button>
+    </div>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
