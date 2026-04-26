@@ -137,46 +137,46 @@ canvas.addEventListener('click', e => {
 
 // ── AI robber move ────────────────────────────────────────────────────────────
 
-export function doAiMove() {
-  if (phase !== 'play' || winner || turn !== 'robber') return;
-  const mode = /** @type {string} */ (diffSel.value);
-  const next = robberAI(mode, robberNode, copNode, adj, ap);
-  const labels = { greedy: 'Greedy', lookahead: 'Lookahead', astar: 'A* escape' };
-  const stayed = next === robberNode ? ' (stays)' : '';
-  setLog(`[${labels[mode]}] Robber → <strong>${next}</strong>${stayed}. Cop's turn.`);
-  moveRobber(next);
-  updateUI();
-}
+// export function doAiMove() {
+//   if (phase !== 'play' || winner || turn !== 'robber') return;
+//   const mode = /** @type {string} */ (diffSel.value);
+//   const next = robberAI(mode, robberNode, copNode, adj, ap);
+//   const labels = { greedy: 'Greedy', lookahead: 'Lookahead', astar: 'A* escape' };
+//   const stayed = next === robberNode ? ' (stays)' : '';
+//   setLog(`[${labels[mode]}] Robber → <strong>${next}</strong>${stayed}. Cop's turn.`);
+//   moveRobber(next);
+//   updateUI();
+// }
 
 // ── Auto-play ─────────────────────────────────────────────────────────────────
 
-function stopAuto() {
-  if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
-  autoBtn.textContent = 'Auto-play robber';
-}
+// function stopAuto() {
+//   if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+//   autoBtn.textContent = 'Auto-play robber';
+// }
 
-function toggleAuto() {
-  if (autoTimer) { stopAuto(); return; }
-  if (phase !== 'play' || winner) { setLog('Start a game first.'); return; }
-  autoBtn.textContent = 'Stop auto-play';
-  autoTimer = setInterval(() => {
-    if (!winner && phase === 'play' && turn === 'robber') doAiMove();
-    else if (winner || phase !== 'play') stopAuto();
-  }, 900);
-}
+// function toggleAuto() {
+//   if (autoTimer) { stopAuto(); return; }
+//   if (phase !== 'play' || winner) { setLog('Start a game first.'); return; }
+//   autoBtn.textContent = 'Stop auto-play';
+//   autoTimer = setInterval(() => {
+//     if (!winner && phase === 'play' && turn === 'robber') doAiMove();
+//     else if (winner || phase !== 'play') stopAuto();
+//   }, 900);
+// }
 
 // ── Hint ──────────────────────────────────────────────────────────────────────
 
-function showHint() {
-  if (turn !== 'cop' || phase !== 'play') return;
-  const moves = [copNode, ...adj[copNode]];
-  let best = copNode, bestDist = Infinity;
-  for (const m of moves) {
-    const d = ap[m][robberNode];
-    if (d < bestDist) { bestDist = d; best = m; }
-  }
-  setLog(`Hint: move to node <strong>${best}</strong> — closest to robber (distance <strong>${bestDist}</strong>).`);
-}
+// function showHint() {
+//   if (turn !== 'cop' || phase !== 'play') return;
+//   const moves = [copNode, ...adj[copNode]];
+//   let best = copNode, bestDist = Infinity;
+//   for (const m of moves) {
+//     const d = ap[m][robberNode];
+//     if (d < bestDist) { bestDist = d; best = m; }
+//   }
+//   setLog(`Hint: move to node <strong>${best}</strong> — closest to robber (distance <strong>${bestDist}</strong>).`);
+// }
 
 // ── Reset ─────────────────────────────────────────────────────────────────────
 
