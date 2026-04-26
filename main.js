@@ -144,7 +144,7 @@ document.getElementById('resetBtn').addEventListener('click', resetGame);
 function resizeCanvas() {
   const w = canvas.parentElement.clientWidth;
   canvas.width = Math.min(w, 700);
-  canvas.height = Math.round(canvas.width * 400 / 700);
+  canvas.height = Math.round(canvas.width * 480 / 700);
   draw();
 }
 

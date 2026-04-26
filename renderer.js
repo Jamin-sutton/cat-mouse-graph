@@ -3,14 +3,14 @@
  * All canvas drawing logic.
  */
 
-const W = 700, H = 400, R = 22;
+const W = 700, H = 480, R = 30;
 
 /** Read CSS variable from root (works in both light and dark mode) */
 function cssVar(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-function px(node, canvasWidth)  { return node.x * canvasWidth  / W; }
+function px(node, canvasWidth) { return node.x * canvasWidth / W; }
 function py(node, canvasHeight) { return node.y * canvasHeight / H; }
 
 /**
@@ -26,7 +26,7 @@ export function render(canvas, state) {
 
   const { nodes, edges, adj, ap, copNode, robberNode, phase, movable } = state;
 
-  // ── Heat overlay (cop distance threat) ────────────────────────────────────
+  // ── Heat overlay (cat distance threat) ────────────────────────────────────
   if (phase === 'play' && copNode >= 0) {
     for (const node of nodes) {
       const d = ap[copNode][node.id];
@@ -34,7 +34,7 @@ export function render(canvas, state) {
       const alpha = Math.max(0, 0.35 - d * 0.08);
       if (alpha <= 0) continue;
       ctx.beginPath();
-      ctx.arc(px(node, cw), py(node, ch), R + 8, 0, Math.PI * 2);
+      ctx.arc(px(node, cw), py(node, ch), R + 10, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(186,117,23,${alpha})`;
       ctx.fill();
     }
@@ -42,7 +42,7 @@ export function render(canvas, state) {
 
   // ── Edges ─────────────────────────────────────────────────────────────────
   ctx.strokeStyle = cssVar('--edge');
-  ctx.lineWidth = 1.5;
+  ctx.lineWidth = 3;
   for (const [a, b] of edges) {
     ctx.beginPath();
     ctx.moveTo(px(nodes[a], cw), py(nodes[a], ch));
@@ -53,50 +53,63 @@ export function render(canvas, state) {
   // ── Nodes ─────────────────────────────────────────────────────────────────
   for (const node of nodes) {
     const x = px(node, cw), y = py(node, ch);
-    const isCop    = node.id === copNode;
-    const isRobber = node.id === robberNode;
-    const isMove   = movable.includes(node.id) && !isCop && !isRobber;
-    const isBoth   = isCop && isRobber;
+    const isCat = node.id === copNode;
+    const isMouse = node.id === robberNode;
+    const isMove = movable.includes(node.id) && !isCat && !isMouse;
+    const isBoth = isCat && isMouse;
 
-    let fill, stroke, textColor;
+    let fill, stroke;
 
     if (isBoth) {
-      fill = '#9B3892'; stroke = '#6B2465'; textColor = '#fff';
-    } else if (isCop) {
-      fill = cssVar('--cop'); stroke = cssVar('--cop-dark'); textColor = cssVar('--cop-text');
-    } else if (isRobber) {
-      fill = cssVar('--rob'); stroke = cssVar('--rob-dark'); textColor = cssVar('--rob-text');
+      fill = '#9B3892'; stroke = '#6B2465';
+    } else if (isCat) {
+      fill = cssVar('--cop'); stroke = cssVar('--cop-dark');
+    } else if (isMouse) {
+      fill = cssVar('--rob'); stroke = cssVar('--rob-dark');
     } else if (isMove) {
-      fill = cssVar('--move'); stroke = cssVar('--move-dark'); textColor = cssVar('--move-text');
+      fill = cssVar('--move'); stroke = cssVar('--move-dark');
     } else {
-      fill = cssVar('--node-bg'); stroke = cssVar('--node-stroke'); textColor = cssVar('--text');
+      fill = cssVar('--node-bg'); stroke = cssVar('--node-stroke');
     }
 
+    // Draw circle
     ctx.beginPath();
     ctx.arc(x, y, R, 0, Math.PI * 2);
     ctx.fillStyle = fill;
     ctx.fill();
     ctx.strokeStyle = stroke;
-    ctx.lineWidth = (isCop || isRobber || isMove) ? 2.5 : 1.5;
+    ctx.lineWidth = (isCat || isMouse || isMove) ? 3.5 : 2;
     ctx.stroke();
 
     // Distance label (small, top-right corner) during play
-    if (phase === 'play' && !isCop && !isRobber && copNode >= 0) {
+    if (phase === 'play' && !isCat && !isMouse && copNode >= 0) {
       const d = ap[copNode][node.id];
       ctx.fillStyle = cssVar('--text-muted');
-      ctx.font = '10px system-ui, sans-serif';
+      ctx.font = '11px system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(d === Infinity ? '∞' : d, x + R * 0.6, y - R * 0.6);
+      ctx.fillText(d === Infinity ? '∞' : d, x + R * 0.65, y - R * 0.65);
     }
 
-    // Node label
-    ctx.fillStyle = textColor;
-    ctx.font = '500 12px system-ui, sans-serif';
+    // Node label — emoji for cat/mouse, number otherwise
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    const label = isBoth ? '!' : isCop ? 'C' : isRobber ? 'R' : String(node.id);
-    ctx.fillText(label, x, y);
+
+    if (isBoth) {
+      ctx.font = `${R * 1.1}px system-ui, sans-serif`;
+      ctx.fillText('💥', x, y);
+    } else if (isCat) {
+      ctx.font = `${R * 1.1}px system-ui, sans-serif`;
+      ctx.fillText('🐱', x, y);
+    } else if (isMouse) {
+      ctx.font = `${R * 1.1}px system-ui, sans-serif`;
+      ctx.fillText('🐭', x, y);
+    } else {
+      const textColor = cssVar('--text');
+      ctx.fillStyle = textColor;
+      ctx.font = '500 13px system-ui, sans-serif';
+      ctx.fillText(String(node.id), x, y);
+    }
   }
 }
 
@@ -108,7 +121,7 @@ export function hitTest(mx, my, nodes, canvas) {
   for (const node of nodes) {
     const dx = px(node, cw) - mx;
     const dy = py(node, ch) - my;
-    if (Math.sqrt(dx * dx + dy * dy) < R + 5) return node.id;
+    if (Math.sqrt(dx * dx + dy * dy) < R + 6) return node.id;
   }
   return -1;
 }
