@@ -32,7 +32,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #444441;
-    --surface: #1a1a18;
+    --surface: #d3d1c7;
     --edge: #111110;
     --node-bg: #2c2c2a;
     --node-stroke: #888780;
